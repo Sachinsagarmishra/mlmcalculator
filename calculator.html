@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Business Plan Calculator</title>
+  <style>
+    :root{
+      --bg:#0c0f14; --card:#131823; --muted:#8fa3b8; --text:#e6eef7; --accent:#6ee7ff; --accent2:#a78bfa; --good:#16a34a; --bad:#dc2626; --warn:#f59e0b;
+      --ring:0 0 0 2px rgba(110,231,255,.35);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:linear-gradient(180deg,#0b0e13,#0f1420 35%,#0b0e13);color:var(--text)}
+    .container{max-width:1100px;margin-inline:auto;padding:20px}
+    header{display:flex;gap:14px;align-items:center;justify-content:space-between;margin-bottom:14px}
+    .title{font-size:clamp(20px,4vw,30px);font-weight:800;letter-spacing:.3px}
+    .sub{color:var(--muted);font-size:.95rem}
+    .grid{display:grid;grid-template-columns:1fr;gap:14px}
+    @media(min-width:880px){.grid{grid-template-columns:1.1fr .9fr}}
+    .card{background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.08);border-radius:18px;box-shadow:0 10px 30px rgba(0,0,0,.35);backdrop-filter:blur(6px)}
+    .card h2{margin:0;padding:16px 16px 0;font-size:1.05rem;letter-spacing:.2px;color:#cfe6ff}
+    .card .content{padding:16px}
+    .row{display:grid;grid-template-columns:1fr;gap:10px}
+    @media(min-width:560px){.row.two{grid-template-columns:1fr 1fr}}
+    @media(min-width:760px){.row.three{grid-template-columns:repeat(3,1fr)}}
+    label{font-size:.85rem;color:var(--muted)}
+    input[type="number"],input[type="text"]{width:100%;padding:12px 12px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:#0b1018;color:var(--text);outline:none;transition:.2s}
+    input:focus{box-shadow:var(--ring);border-color:rgba(110,231,255,.45)}
+    .muted{color:var(--muted)}
+    .pill{display:inline-flex;align-items:center;gap:8px;background:#0f1726;border:1px solid rgba(255,255,255,.08);padding:8px 12px;border-radius:999px;font-size:.8rem}
+    .accent{color:var(--accent)}
+    .accent2{color:var(--accent2)}
+    .btn{appearance:none;border:none;background:linear-gradient(90deg,var(--accent2),var(--accent));padding:10px 14px;border-radius:14px;color:#071018;font-weight:700;cursor:pointer}
+    .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,.15);color:var(--text)}
+    table{width:100%;border-collapse:collapse}
+    th,td{padding:10px;border-bottom:1px dashed rgba(255,255,255,.1);text-align:right}
+    th:first-child,td:first-child{text-align:left}
+    tbody tr:hover{background:rgba(255,255,255,.03)}
+    .stat{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-radius:14px;background:linear-gradient(180deg,rgba(167,139,250,.12),rgba(110,231,255,.06));border:1px solid rgba(110,231,255,.18)}
+    .stat .label{color:var(--muted);font-size:.85rem}
+    .stat .value{font-weight:800;font-size:1.05rem}
+    .bad{color:var(--bad)}.good{color:var(--good)}.warn{color:var(--warn)}
+    details{border:1px solid rgba(255,255,255,.12);border-radius:14px}
+    details>summary{list-style:none;padding:12px 14px;cursor:pointer}
+    details>summary::-webkit-details-marker{display:none}
+    .chip{font-size:.75rem;color:#b9ccff;background:#0e1727;border:1px solid rgba(110,231,255,.25);padding:4px 8px;border-radius:8px}
+    .footer{margin-top:18px;color:var(--muted);font-size:.8rem;text-align:center}
+    .divider{height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.12),transparent);margin:8px 0 14px}
+    .tabs{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 10px}
+    .tab{padding:8px 10px;border-radius:10px;border:1px solid rgba(255,255,255,.14);cursor:pointer;font-size:.85rem;color:var(--muted)}
+    .tab.active{color:#071018;background:linear-gradient(90deg,var(--accent2),var(--accent));font-weight:700;border-color:transparent}
+    .hide{display:none !important}
+    .inline-help{font-size:.78rem;color:var(--muted)}
+    .kbd{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;background:#0b1018;border:1px solid rgba(255,255,255,.18);padding:2px 6px;border-radius:6px}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div>
+        <div class="title">Business Plan Calculator</div>
+        <div class="sub">Mobile-first, single file. Live calculations. No internet needed.</div>
+      </div>
+      <div class="pill"><span>ROI</span><strong class="accent">8–20%/mo</strong><span class="muted">• weekly payouts</span></div>
+    </header>
+
+    <div class="grid">
+      <!-- Left: Inputs -->
+      <section class="card">
+        <h2>Inputs</h2>
+        <div class="content">
+          <div class="row two">
+            <div>
+              <label for="principal">Your Principal (USD)</label>
+              <input id="principal" type="number" min="0" inputmode="decimal" value="5000" />
+            </div>
+            <div>
+              <label for="weeks">Assumed Weeks per Month</label>
+              <input id="weeks" type="number" min="1" step="0.1" value="4" />
+            </div>
+          </div>
+
+          <div class="divider"></div>
+          <details open>
+            <summary><strong>Direct Referrals</strong> <span class="chip">5% if > $100 plan</span></summary>
+            <div class="content">
+              <div class="row three" id="referrals"></div>
+              <div style="display:flex;gap:10px;margin-top:10px">
+                <button class="btn" id="addRef">+ Add Referral</button>
+                <button class="btn ghost" id="clearRef">Clear</button>
+              </div>
+            </div>
+          </details>
+
+          <div class="divider"></div>
+          <details>
+            <summary><strong>Team Business (Levels 1–20)</strong> <span class="chip">Level payout table applied</span></summary>
+            <div class="content" id="levelsWrap"></div>
+          </details>
+
+          <div class="divider"></div>
+          <details>
+            <summary><strong>Leg Volumes</strong> <span class="chip">For rank & rewards rules</span></summary>
+            <div class="content">
+              <div class="row three" id="legs"></div>
+            </div>
+          </details>
+
+          <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap">
+            <button class="btn" id="resetAll">Reset</button>
+            <button class="btn ghost" id="shareState">Share</button>
+          </div>
+          <div class="inline-help" style="margin-top:8px">Tip: Use <span class="kbd">Share</span> to copy URL with your inputs.</div>
+        </div>
+      </section>
+
+      <!-- Right: Outputs -->
+      <section class="card">
+        <h2>Results</h2>
+        <div class="content">
+          <div class="tabs">
+            <button class="tab active" data-tab="summary">Summary</button>
+            <button class="tab" data-tab="ranks">Ranks</button>
+            <button class="tab" data-tab="rewards">Rewards</button>
+            <button class="tab" data-tab="tour">Tour</button>
+          </div>
+
+          <div data-panel="summary">
+            <div class="row two">
+              <div class="stat"><div class="label">Monthly Rate (auto)</div><div class="value" id="rate">—</div></div>
+              <div class="stat"><div class="label">Weekly Payout</div><div class="value" id="weekly">—</div></div>
+              <div class="stat"><div class="label">1.5× Cap</div><div class="value" id="cap">—</div></div>
+              <div class="stat"><div class="label">Est. Weeks to Cap</div><div class="value" id="weeksToCap">—</div></div>
+              <div class="stat"><div class="label">Direct Referrals (5%)</div><div class="value" id="direct">—</div></div>
+              <div class="stat"><div class="label">Level Income</div><div class="value" id="levelIncome">—</div></div>
+            </div>
+          </div>
+
+          <div class="hide" data-panel="ranks">
+            <div class="row">
+              <table>
+                <thead>
+                  <tr><th>Rank</th><th>Target</th><th>From Power Leg (≤30%)</th><th>From Rest (≤70%)</th><th>Total Counted</th><th>Status</th><th>Remaining</th></tr>
+                </thead>
+                <tbody id="rankBody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="hide" data-panel="rewards">
+            <div class="row">
+              <table>
+                <thead>
+                  <tr><th>Milestone</th><th>Target</th><th>Req 40%</th><th>Req 30%</th><th>Req 30%</th><th>Status</th><th>Remaining (by leg)</th></tr>
+                </thead>
+                <tbody id="rewardBody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="hide" data-panel="tour">
+            <div class="row">
+              <table>
+                <thead>
+                  <tr><th>Tour</th><th>Target</th><th>Leg 40%</th><th>Leg 30%</th><th>Leg 30%</th><th>Status</th><th>Remaining (by leg)</th></tr>
+                </thead>
+                <tbody id="tourBody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+          <div class="row two">
+            <div class="stat"><div class="label">Top 3 Legs</div><div class="value" id="topLegs">—</div></div>
+            <div class="stat"><div class="label">Next Goal</div><div class="value" id="nextGoal">—</div></div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="footer">v1.0 — Calculator assumes weekly payouts, ROI cap 1.5×, referral 5% (> $100), level rates by level.
+    </div>
+  </div>
+
+  <script>
+    // ---------- Data ----------
+    const TIERS = [
+      {min:100, rate:0.08},
+      {min:500, rate:0.10},
+      {min:5000, rate:0.15},
+      {min:10000, rate:0.20}
+    ];
+    const LEVEL_RATES = [0.10,0.08,0.05,0.05,0.04,0.04,0.03,0.03,0.02,0.01,0.005,0.005,0.005,0.005,0.005,0.002,0.002,0.002,0.002,0.002];
+    const RANKS = [
+      {name:'Silver', target:25000},
+      {name:'Gold', target:50000},
+      {name:'Royal', target:250000},
+      {name:'Ruby', target:1000000},
+      {name:'Diamond', target:2000000},
+      {name:'Crown', target:5000000},
+      {name:'Brand Ambassador', target:12500000},
+    ];
+    const REWARDS = [
+      {name:'Mobile', target:200}, {name:'Tab', target:400}, {name:'Laptop', target:700}, {name:'iPhone', target:1100},
+      {name:'Bike', target:1500}, {name:'Car', target:4000}, {name:'Sedan', target:8000}, {name:'XUV', target:15000},
+      {name:'Dream Car', target:30000}, {name:'Flat', target:70000}, {name:'Villa', target:150000}, {name:'Range Rover', target:250000}
+    ];
+    const TOUR = {name:'Thailand / Bangkok', target:30000};
+
+    // ---------- Helpers ----------
+    const $ = (sel, root=document) => root.querySelector(sel);
+    const $$ = (sel, root=document) => [...root.querySelectorAll(sel)];
+    const fmt = (n,opts={}) => isFinite(n)? n.toLocaleString(undefined,{maximumFractionDigits:opts.dp??2,minimumFractionDigits:opts.dp??0}) : '—';
+
+    function tierRate(principal){
+      if(principal<=0) return 0;
+      // choose highest tier with min<=principal
+      let rate = 0;
+      TIERS.forEach(t=>{ if(principal>=t.min) rate=t.rate; });
+      return rate;
+    }
+
+    function compute(){
+      const principal = +$('#principal').value || 0;
+      const weeks = +$('#weeks').value || 4;
+      const rate = tierRate(principal);
+      const weekly = principal*rate/Math.max(weeks,1);
+      const cap = principal*1.5;
+      const weeksToCap = weekly>0? cap/weekly : 0;
+
+      // referrals: sum of >100 * 5%
+      const refVals = $$('#referrals input').map(x=> +x.value || 0);
+      const direct = 0.05 * refVals.filter(v=>v>100).reduce((a,b)=>a+b,0);
+
+      // levels
+      const levelInputs = $$('#levelsWrap input');
+      let levelIncome = 0; let levelVolumes=[];
+      levelInputs.forEach((inp,idx)=>{ const v=+inp.value||0; levelVolumes[idx]=v; levelIncome += v * LEVEL_RATES[idx]; });
+
+      // legs
+      const legs = $$('#legs input').map(x=> +x.value || 0);
+      const totalLeg = legs.reduce((a,b)=>a+b,0);
+      const sorted = [...legs].sort((a,b)=>b-a);
+      // Dashboard snippets
+      $('#topLegs').textContent = `${fmt(sorted[0]||0)} / ${fmt(sorted[1]||0)} / ${fmt(sorted[2]||0)}`;
+
+      // Render summary values
+      $('#rate').textContent = `${(rate*100).toFixed(2)}%`;
+      $('#weekly').textContent = `$ ${fmt(weekly)}`;
+      $('#cap').textContent = `$ ${fmt(cap, {dp:0})}`;
+      $('#weeksToCap').textContent = fmt(weeksToCap, {dp:1});
+      $('#direct').textContent = `$ ${fmt(direct)}`;
+      $('#levelIncome').textContent = `$ ${fmt(levelIncome)}`;
+
+      // Ranks (Power Leg 30% cap)
+      const power = sorted[0]||0; const rest = totalLeg - power;
+      const tbodyR = $('#rankBody'); tbodyR.innerHTML='';
+      let nextRankText = '—';
+      for(const r of RANKS){
+        const maxPower = 0.30*r.target;
+        const maxRest = 0.70*r.target;
+        const countedPower = Math.min(maxPower, power);
+        const countedRest = Math.min(maxRest, Math.max(0, rest));
+        const counted = countedPower + countedRest;
+        const ok = counted >= r.target;
+        const remaining = Math.max(0, r.target - counted);
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${r.name}</td><td>$ ${fmt(r.target,{dp:0})}</td><td>$ ${fmt(countedPower)}</td><td>$ ${fmt(countedRest)}</td><td>$ ${fmt(counted)}</td><td class="${ok?'good':'bad'}">${ok?'YES':'NO'}</td><td>$ ${fmt(remaining)}</td>`;
+        tbodyR.appendChild(tr);
+        if(!ok && nextRankText==='—') nextRankText = `${r.name} (need $${fmt(remaining,{dp:0})})`;
+      }
+
+      // Rewards 40/30/30 using top-3 legs
+      const L1=sorted[0]||0, L2=sorted[1]||0, L3=sorted[2]||0;
+      const tbodyW = $('#rewardBody'); tbodyW.innerHTML='';
+      let nextRewardText = '';
+      for(const rw of REWARDS){
+        const r40 = 0.40*rw.target, r30a=0.30*rw.target, r30b=0.30*rw.target;
+        const ok = (L1>=r40 && L2>=r30a && L3>=r30b);
+        const rem = Math.max(0,r40-L1) + Math.max(0,r30a-L2) + Math.max(0,r30b-L3);
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${rw.name}</td><td>$ ${fmt(rw.target,{dp:0})}</td><td>$ ${fmt(r40)}</td><td>$ ${fmt(r30a)}</td><td>$ ${fmt(r30b)}</td><td class="${ok?'good':'bad'}">${ok?'YES':'NO'}</td><td>$ ${fmt(rem)}</td>`;
+        tbodyW.appendChild(tr);
+        if(!ok && !nextRewardText) nextRewardText = `${rw.name} (need $${fmt(rem,{dp:0})})`;
+      }
+
+      // Tour
+      const t40 = 0.40*TOUR.target, t30a = 0.30*TOUR.target, t30b=0.30*TOUR.target;
+      const eligible = (L1>=t40 && L2>=t30a && L3>=t30b);
+      const trem = Math.max(0,t40-L1)+Math.max(0,t30a-L2)+Math.max(0,t30b-L3);
+      const tbodyT = $('#tourBody'); tbodyT.innerHTML='';
+      const trT = document.createElement('tr');
+      trT.innerHTML = `<td>${TOUR.name}</td><td>$ ${fmt(TOUR.target,{dp:0})}</td><td>$ ${fmt(t40)}</td><td>$ ${fmt(t30a)}</td><td>$ ${fmt(t30b)}</td><td class="${eligible?'good':'bad'}">${eligible?'YES':'NO'}</td><td>$ ${fmt(trem)}</td>`;
+      tbodyT.appendChild(trT);
+
+      // Next goal badge
+      const next = [];
+      if(nextRankText!=='—') next.push(`Next Rank → ${nextRankText}`);
+      if(nextRewardText) next.push(`Next Reward → ${nextRewardText}`);
+      next.push(`Tour → ${eligible? 'Eligible' : 'need $'+fmt(trem,{dp:0})}`);
+      $('#nextGoal').textContent = next.join(' | ');
+    }
+
+    // ---------- UI Setup ----------
+    function addReferral(v=0){
+      const idx = $$('#referrals .ref').length + 1;
+      const wrap = document.createElement('div');
+      wrap.className = 'ref';
+      wrap.innerHTML = `<label>Referral ${idx} (USD)</label><input type="number" min="0" inputmode="decimal" value="${v}" />`;
+      $('#referrals').appendChild(wrap);
+      wrap.querySelector('input').addEventListener('input', scheduleCompute);
+    }
+
+    function buildLevels(){
+      const tbl = document.createElement('table');
+      const thead = document.createElement('thead');
+      thead.innerHTML = `<tr><th>Level</th><th>Volume (USD)</th><th>Payout %</th></tr>`;
+      tbl.appendChild(thead);
+      const tb = document.createElement('tbody');
+      for(let i=0;i<20;i++){
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${i+1}</td><td><input type="number" min="0" inputmode="decimal" value="0" /></td><td>${(LEVEL_RATES[i]*100).toFixed(1)}%</td>`;
+        tb.appendChild(tr);
+      }
+      tbl.appendChild(tb);
+      $('#levelsWrap').appendChild(tbl);
+      $$('#levelsWrap input').forEach(inp=>inp.addEventListener('input', scheduleCompute));
+    }
+
+    function buildLegs(){
+      const names=['Leg A','Leg B','Leg C','Leg D','Leg E'];
+      names.forEach(n=>{
+        const d = document.createElement('div');
+        d.innerHTML = `<label>${n} (USD)</label><input type="number" min="0" inputmode="decimal" value="0" />`;
+        $('#legs').appendChild(d);
+      });
+      $$('#legs input').forEach(inp=>inp.addEventListener('input', scheduleCompute));
+    }
+
+    // Tabs
+    $$('.tab').forEach(t=>{
+      t.addEventListener('click',()=>{
+        $$('.tab').forEach(x=>x.classList.remove('active'));
+        t.classList.add('active');
+        const name = t.dataset.tab;
+        $$('[data-panel]').forEach(p=>p.classList.toggle('hide', p.dataset.panel!==name));
+      })
+    })
+
+    // Debounce compute
+    let timer; function scheduleCompute(){ clearTimeout(timer); timer = setTimeout(compute, 40); }
+
+    // Share state via URL hash
+    function encodeState(){
+      const state = {
+        p:+$('#principal').value||0,
+        w:+$('#weeks').value||4,
+        refs: $$('#referrals input').map(x=>+x.value||0),
+        lvls: $$('#levelsWrap input').map(x=>+x.value||0),
+        legs: $$('#legs input').map(x=>+x.value||0)
+      };
+      return btoa(unescape(encodeURIComponent(JSON.stringify(state))));
+    }
+    function decodeState(s){
+      try{ return JSON.parse(decodeURIComponent(escape(atob(s)))); }catch(e){ return null; }
+    }
+
+    function applyState(state){
+      $('#principal').value = state.p ?? 0;
+      $('#weeks').value = state.w ?? 4;
+      // referrals
+      $('#referrals').innerHTML='';
+      (state.refs?.length?state.refs:[0,0,0,0,0]).forEach(v=>addReferral(v));
+      // levels
+      const inputs=$$('#levelsWrap input');
+      (state.lvls||[]).forEach((v,i)=>{ if(inputs[i]) inputs[i].value=v; });
+      // legs
+      const legInputs=$$('#legs input');
+      (state.legs||[]).forEach((v,i)=>{ if(legInputs[i]) legInputs[i].value=v; });
+      compute();
+    }
+
+    // Buttons
+    $('#addRef')?.addEventListener('click',()=>{ addReferral(0); compute(); });
+    $('#clearRef')?.addEventListener('click',()=>{ $('#referrals').innerHTML=''; for(let i=0;i<3;i++) addReferral(0); compute(); });
+    $('#resetAll')?.addEventListener('click',()=>{ history.replaceState(null,'',location.pathname); location.reload(); });
+    $('#shareState')?.addEventListener('click',()=>{
+      const hash = encodeState();
+      const url = location.origin+location.pathname+'#'+hash;
+      navigator.clipboard?.writeText(url);
+      const btn = $('#shareState'); btn.textContent='Copied!'; setTimeout(()=>btn.textContent='Share',1200);
+    });
+
+    // Initialize
+    (function init(){
+      for(let i=0;i<5;i++) addReferral(0);
+      buildLevels();
+      buildLegs();
+      $('#principal').addEventListener('input', scheduleCompute);
+      $('#weeks').addEventListener('input', scheduleCompute);
+      // load state if present
+      if(location.hash.length>1){ const st=decodeState(location.hash.slice(1)); if(st) applyState(st); else compute(); }
+      else compute();
+    })();
+  </script>
+</body>
+</html>
